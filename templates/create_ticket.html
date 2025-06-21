@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Create Ticket - GTN Engineering IT Helpdesk{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="ri-add-line"></i> Create New Support Ticket</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="mb-3">
+                                {{ form.title.label(class="form-label") }}
+                                {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+                                {% if form.title.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.title.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Provide a clear, concise title for your issue</div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ form.category.label(class="form-label") }}
+                                        {{ form.category(class="form-select" + (" is-invalid" if form.category.errors else "")) }}
+                                        {% if form.category.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.category.errors %}{{ error }}{% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ form.priority.label(class="form-label") }}
+                                        {{ form.priority(class="form-select" + (" is-invalid" if form.priority.errors else "")) }}
+                                        {% if form.priority.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.priority.errors %}{{ error }}{% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ form.system_name.label(class="form-label") }}
+                                        {{ form.system_name(class="form-control", placeholder="Enter your computer/system name") }}
+                                        <div class="form-text">Optional: Your computer/workstation name</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.description.label(class="form-label") }}
+                                {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), 
+                                                  rows="6", placeholder="Please describe your issue in detail...") }}
+                                {% if form.description.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.description.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Include steps to reproduce, error messages, and any relevant details</div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">
+                                    <i class="ri-arrow-left-line"></i> Cancel
+                                </a>
+                                {{ form.submit(class="btn btn-primary") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h6><i class="ri-question-line"></i> Priority Guidelines</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <span class="badge bg-success">Low</span> - Minor issues that don't affect productivity
+                            </li>
+                            <li class="mb-2">
+                                <span class="badge bg-warning">Medium</span> - Issues that affect productivity but have workarounds
+                            </li>
+                            <li class="mb-2">
+                                <span class="badge bg-danger">High</span> - Issues that significantly impact work
+                            </li>
+                            <li class="mb-0">
+                                <span class="badge bg-dark">Critical</span> - System down or major business impact
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

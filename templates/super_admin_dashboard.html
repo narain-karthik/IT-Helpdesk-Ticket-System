@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}Super Admin Dashboard - GTN Engineering IT Helpdesk{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h3><i class="ri-shield-star-line"></i> Super Admin Dashboard</h3>
+                
+                <!-- Quick Actions -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <a href="{{ url_for('create_user') }}" class="btn btn-primary w-100">
+                            <i class="ri-user-add-line"></i> Create User
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('manage_users') }}" class="btn btn-info w-100">
+                            <i class="ri-team-line"></i> Manage Users
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('download_report') }}" class="btn btn-success w-100">
+                            <i class="ri-file-excel-2-line"></i> Excel Report
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-warning w-100" onclick="window.print()">
+                            <i class="ri-printer-line"></i> Print View
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistics Overview -->
+                <div class="row mb-4">
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="ri-ticket-line text-primary" style="font-size: 2rem;"></i>
+                                <h5 class="card-title">{{ stats.total_tickets }}</h5>
+                                <p class="card-text">Total Tickets</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="ri-error-warning-line text-danger" style="font-size: 2rem;"></i>
+                                <h5 class="card-title">{{ stats.open_tickets }}</h5>
+                                <p class="card-text">Open</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="ri-time-line text-info" style="font-size: 2rem;"></i>
+                                <h5 class="card-title">{{ stats.in_progress_tickets }}</h5>
+                                <p class="card-text">In Progress</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="ri-check-line text-success" style="font-size: 2rem;"></i>
+                                <h5 class="card-title">{{ stats.resolved_tickets }}</h5>
+                                <p class="card-text">Resolved</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="ri-user-line text-secondary" style="font-size: 2rem;"></i>
+                                <h5 class="card-title">{{ stats.total_users }}</h5>
+                                <p class="card-text">Users</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="ri-shield-user-line text-dark" style="font-size: 2rem;"></i>
+                                <h5 class="card-title">{{ stats.total_admins }}</h5>
+                                <p class="card-text">Admins</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Statistics -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6><i class="ri-bar-chart-line"></i> Tickets by Category</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="text-center">
+                                            <h4 class="text-primary">{{ stats.hardware_tickets }}</h4>
+                                            <p>Hardware</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="text-center">
+                                            <h4 class="text-info">{{ stats.software_tickets }}</h4>
+                                            <p>Software</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="text-center">
+                                            <h4 class="text-warning">{{ stats.network_tickets }}</h4>
+                                            <p>Network</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="text-center">
+                                            <h4 class="text-secondary">{{ stats.other_tickets }}</h4>
+                                            <p>Other</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Tickets -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6><i class="ri-time-line"></i> Recent Tickets</h6>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_tickets %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Ticket #</th>
+                                            <th>Title</th>
+                                            <th>User</th>
+                                            <th>IP Address</th>
+                                            <th>System</th>
+                                            <th>Category</th>
+                                            <th>Priority</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ticket in recent_tickets %}
+                                            <tr>
+                                                <td>{{ ticket.ticket_number }}</td>
+                                                <td>{{ ticket.title }}</td>
+                                                <td>{{ ticket.user_name }}</td>
+                                                <td><code class="small">{{ ticket.user_ip_address or 'N/A' }}</code></td>
+                                                <td><code class="small">{{ ticket.user_system_name or 'N/A' }}</code></td>
+                                                <td>
+                                                    <span class="badge bg-secondary">{{ ticket.category }}</span>
+                                                </td>
+                                                <td>
+                                                    {% set priority_class = {
+                                                        'Low': 'success',
+                                                        'Medium': 'warning',
+                                                        'High': 'danger',
+                                                        'Critical': 'dark'
+                                                    } %}
+                                                    <span class="badge bg-{{ priority_class[ticket.priority] }}">
+                                                        {{ ticket.priority }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    {% set status_class = {
+                                                        'Open': 'primary',
+                                                        'In Progress': 'info',
+                                                        'Resolved': 'success',
+                                                        'Closed': 'secondary'
+                                                    } %}
+                                                    <span class="badge bg-{{ status_class[ticket.status] }}">
+                                                        {{ ticket.status }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ ticket.created_at.strftime('%Y-%m-%d') }}</td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="{{ url_for('view_ticket', ticket_id=ticket.id) }}" 
+                                                           class="btn btn-outline-primary" title="View Details">
+                                                            <i class="ri-eye-line"></i>
+                                                        </a>
+                                                        <a href="{{ url_for('edit_assigned_ticket', ticket_id=ticket.id) }}" 
+                                                           class="btn btn-outline-warning" title="Edit Ticket">
+                                                            <i class="ri-edit-line"></i>
+                                                        </a>
+                                                        {% if ticket.status == 'Open' %}
+                                                            <a href="{{ url_for('assign_work', ticket_id=ticket.id) }}" 
+                                                               class="btn btn-outline-success" title="Assign Work">
+                                                                <i class="ri-user-add-line"></i>
+                                                            </a>
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <p class="text-muted">No recent tickets to display.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function downloadReport(type) {
+    // Implementation for report generation would go here
+    GTNHelpdesk.showNotification(`Generating ${type} report...`, 'info');
+    
+    // Simulate report generation
+    setTimeout(() => {
+        GTNHelpdesk.showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} report downloaded!`, 'success');
+    }, 2000);
+}
+</script>
+{% endblock %}
